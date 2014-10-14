@@ -12,20 +12,20 @@ require "google_drive/file"
 
 
 module GoogleDrive
-    
+
     # A spreadsheet.
     #
     # Use methods in GoogleDrive::Session to get GoogleDrive::Spreadsheet object.
     class Spreadsheet < GoogleDrive::File
 
         include(Util)
-        
+
         SUPPORTED_EXPORT_FORMAT = Set.new(["xls", "csv", "pdf", "ods", "tsv", "html"])
 
         def key
           return self.id
         end
-        
+
         # URL of worksheet-based feed of the spreadsheet.
         def worksheets_feed_url
           return "https://spreadsheets.google.com/feeds/worksheets/%s/private/full" %
@@ -39,7 +39,7 @@ module GoogleDrive
         def spreadsheet_feed_url
           return "https://spreadsheets.google.com/feeds/spreadsheets/private/full/" + self.id
         end
-        
+
         # DEPRECATED: Table and Record feeds are deprecated and they will not be available after
         # March 2012.
         #
@@ -69,7 +69,7 @@ module GoogleDrive
           end
           return result.freeze()
         end
-        
+
         # Returns a GoogleDrive::Worksheet with the given title in the spreadsheet.
         #
         # Returns nil if not found. Returns the first one when multiple worksheets with the
@@ -105,7 +105,7 @@ module GoogleDrive
           doc = @session.request(:get, self.tables_feed_url)
           return doc.css("entry").map(){ |e| Table.new(@session, e) }.freeze()
         end
-        
+
     end
-    
+
 end
