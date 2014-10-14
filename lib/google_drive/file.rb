@@ -10,7 +10,7 @@ require "google_drive/acl"
 
 
 module GoogleDrive
-    
+
     # A file in Google Drive, including Google Docs document/spreadsheet/presentation.
     #
     # Use GoogleDrive::Session#files or GoogleDrive::Session#file_by_title to
@@ -19,13 +19,13 @@ module GoogleDrive
 
         include(Util)
         extend(Forwardable)
-        
+
         def initialize(session, api_file) #:nodoc:
           @session = session
           @api_file = api_file
           delegate_api_methods(self, @api_file, ["title"])
         end
-        
+
         def api_file(params = {})
           if params[:reload]
             api_result = @session.execute!(
@@ -35,7 +35,14 @@ module GoogleDrive
           end
           return @api_file
         end
-        
+
+        # Available File metadata
+        #
+        # Set <tt>params[:reload]</tt> to true to force reloading the file metadata.
+        def metadata(params = {})
+          return api_file(params)
+        end
+
         # Resource ID.
         def resource_id
           return "%s:%s" % [self.resource_type, self.id]
@@ -60,14 +67,14 @@ module GoogleDrive
         def title(params = {})
           return api_file(params).title
         end
-        
+
         # URL to view/edit the file in a Web browser.
         #
         # e.g. "https://docs.google.com/file/d/xxxx/edit"
         def human_url
           return self.alternate_link
         end
-        
+
         # Content types you can specify in methods download_to_file, download_to_string,
         # download_to_io .
         def available_content_types
@@ -77,7 +84,7 @@ module GoogleDrive
             return []
           end
         end
-        
+
         # Downloads the file to a local file.
         #
         # e.g.
@@ -87,7 +94,7 @@ module GoogleDrive
             download_to_io(f, params)
           end
         end
-        
+
         # Downloads the file and returns as a String.
         #
         # e.g.
@@ -97,7 +104,7 @@ module GoogleDrive
           download_to_io(sio, params)
           return sio.string
         end
-        
+
         # Downloads the file and writes it to +io+.
         def download_to_io(io, params = {})
           if !self.api_file.download_url
@@ -113,7 +120,7 @@ module GoogleDrive
             export_to_io(f, format)
           end
         end
-        
+
         def export_as_string(format)
           sio = StringIO.new()
           export_to_io(sio, format)
@@ -133,7 +140,7 @@ module GoogleDrive
           api_result = @session.execute!(:uri => export_url)
           io.write(api_result.body)
         end
-        
+
         # Updates the file with +content+.
         #
         # e.g.
@@ -142,7 +149,7 @@ module GoogleDrive
           media = new_upload_io(StringIO.new(content), params)
           return update_from_media(media, params)
         end
-        
+
         # Updates the file with the content of the local file.
         #
         # e.g.
@@ -194,7 +201,7 @@ module GoogleDrive
               :parameters => {"fileId" => self.id})
           @api_file = api_result.data
         end
-        
+
         alias title= rename
 
         # Creates copy of this file with the given title.
@@ -210,7 +217,7 @@ module GoogleDrive
         end
 
         alias duplicate copy
-        
+
         # Returns GoogleDrive::Acl object for the file.
         #
         # With the object, you can see and modify people who can access the file.
@@ -224,17 +231,17 @@ module GoogleDrive
         #     p [entry.scope_type, entry.scope, entry.role]
         #     # => e.g. ["user", "example1@gmail.com", "owner"]
         #   end
-        #   
+        #
         #   # Shares the file with new people:
         #   # NOTE: This sends email to the new people.
         #   file.acl.push(
         #       {:scope_type => "user", :scope => "example2@gmail.com", :role => "reader"})
         #   file.acl.push(
         #       {:scope_type => "user", :scope => "example3@gmail.com", :role => "writer"})
-        #   
+        #
         #   # Changes the role of a person:
         #   file.acl[1].role = "writer"
-        #   
+        #
         #   # Deletes an ACL entry:
         #   file.acl.delete(file.acl[1])
         def acl(params = {})
@@ -247,7 +254,7 @@ module GoogleDrive
         def inspect
           return "\#<%p id=%p title=%p>" % [self.class, self.id, self.title]
         end
-        
+
     end
-    
+
 end

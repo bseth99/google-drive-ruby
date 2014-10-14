@@ -143,5 +143,62 @@ module GoogleDrive
       return GoogleDrive.login_with_oauth(client)
 
     end
-    
+
+    def self.build_auth(client_id = nil, client_secret = nil)
+
+       client = Google::APIClient.new(
+           :application_name => "google_drive Ruby library",
+           :application_version => "0.4.0"
+       )
+
+       auth = client.authorization
+       auth.client_id = client_id
+       auth.client_secret = client_secret
+       auth.scope = [
+           "https://www.googleapis.com/auth/drive",
+           "https://spreadsheets.google.com/feeds/"
+       ]
+       auth.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+
+       auth
+    end
+
+    def self.open_new_session( auth, code )
+
+      auth.code = code
+      auth.fetch_access_token!()
+
+      token_data = {
+          "access_token" => auth.access_token,
+          "refresh_token" => auth.refresh_token,
+          "expires_in" => auth.expires_in,
+          "issued_at" => auth.issued_at.iso8601,
+      }
+
+    end
+
+    def self.restore_existing_session( client_id = nil, client_secret = nil, token )
+       client = Google::APIClient.new(
+           :application_name => "google_drive Ruby library",
+           :application_version => "0.4.0"
+       )
+
+       auth = client.authorization
+       auth.client_id = client_id
+       auth.client_secret = client_secret
+       auth.scope = [
+           "https://www.googleapis.com/auth/drive",
+           "https://spreadsheets.google.com/feeds/"
+       ]
+       auth.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+
+       auth.access_token = token["access_token"]
+       auth.refresh_token = token["refresh_token"]
+       auth.expires_in = token["expires_in"]
+       auth.issued_at = Time.iso8601(token["issued_at"])
+       auth.fetch_access_token!()
+
+       return GoogleDrive.login_with_oauth(client)
+    end
+
 end
