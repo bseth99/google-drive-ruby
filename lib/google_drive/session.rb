@@ -416,8 +416,16 @@ module GoogleDrive
 
           while true
             response = @fetcher.request_raw(method, url, data, extra_header, auth)
-            if response.code == "401" && @on_auth_fail && @on_auth_fail.call()
-              next
+            if response.code == "302"
+               html = Nokogiri.XML( response.body )
+               location = html.css("A").attr( 'HREF' ).value
+               if location
+                  #puts "Attempt redirect to #{location}"
+                  url = location
+                  next
+               end
+            elsif response.code == "401" && @on_auth_fail && @on_auth_fail.call()
+               next
             end
             if !(response.code =~ /^[23]/)
               raise(
