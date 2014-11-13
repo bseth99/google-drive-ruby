@@ -144,7 +144,7 @@ module GoogleDrive
 
     end
 
-    def self.build_auth(client_id = nil, client_secret = nil)
+    def self.build_auth(client_id = nil, client_secret = nil, opts={})
 
        client = Google::APIClient.new(
            :application_name => "google_drive Ruby library",
@@ -158,7 +158,7 @@ module GoogleDrive
            "https://www.googleapis.com/auth/drive",
            "https://spreadsheets.google.com/feeds/"
        ]
-       auth.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+       auth.redirect_uri = opts[:redirect_uri] || "urn:ietf:wg:oauth:2.0:oob"
 
        auth
     end
@@ -177,7 +177,7 @@ module GoogleDrive
 
     end
 
-    def self.restore_existing_session( client_id = nil, client_secret = nil, token )
+    def self.restore_existing_session( client_id = nil, client_secret = nil, token = nil, opts = {} )
        client = Google::APIClient.new(
            :application_name => "google_drive Ruby library",
            :application_version => "0.4.0"
@@ -190,7 +190,7 @@ module GoogleDrive
            "https://www.googleapis.com/auth/drive",
            "https://spreadsheets.google.com/feeds/"
        ]
-       auth.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+       auth.redirect_uri = opts[:redirect_uri] || "urn:ietf:wg:oauth:2.0:oob"
 
        auth.access_token = token["access_token"]
        auth.refresh_token = token["refresh_token"]
