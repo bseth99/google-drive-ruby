@@ -104,7 +104,8 @@ module GoogleDrive
 
       client = Google::APIClient.new(
           :application_name => "google_drive Ruby library",
-          :application_version => "0.4.0"
+          :application_version => "0.4.0",
+           :user_agent => "pryde-time; google_drive Ruby library"
       )
       auth = client.authorization
       auth.client_id = client_id
@@ -148,7 +149,8 @@ module GoogleDrive
 
        client = Google::APIClient.new(
            :application_name => "google_drive Ruby library",
-           :application_version => "0.4.0"
+           :application_version => "0.4.0",
+           :user_agent => "pryde-time; google_drive Ruby library"
        )
 
        auth = client.authorization
@@ -180,7 +182,8 @@ module GoogleDrive
     def self.restore_existing_session( client_id = nil, client_secret = nil, token = nil, opts = {} )
        client = Google::APIClient.new(
            :application_name => "google_drive Ruby library",
-           :application_version => "0.4.0"
+           :application_version => "0.4.0",
+           :user_agent => "pryde-time; google_drive Ruby library"
        )
 
        auth = client.authorization
