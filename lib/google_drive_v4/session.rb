@@ -10,20 +10,20 @@ require "oauth"
 require "oauth2"
 require "google/api_client"
 
-require "google_drive/util"
-require "google_drive/api_client_fetcher"
-require "google_drive/client_login_fetcher"
-require "google_drive/oauth1_fetcher"
-require "google_drive/oauth2_fetcher"
-require "google_drive/error"
-require "google_drive/authentication_error"
-require "google_drive/spreadsheet"
-require "google_drive/worksheet"
-require "google_drive/collection"
-require "google_drive/file"
+require "google_drive_v4/util"
+require "google_drive_v4/api_client_fetcher"
+require "google_drive_v4/client_login_fetcher"
+require "google_drive_v4/oauth1_fetcher"
+require "google_drive_v4/oauth2_fetcher"
+require "google_drive_v4/error"
+require "google_drive_v4/authentication_error"
+require "google_drive_v4/spreadsheet"
+require "google_drive_v4/worksheet"
+require "google_drive_v4/collection"
+require "google_drive_v4/file"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     # Use GoogleDrive.login_with_oauth or GoogleDrive.saved_session to get
     # GoogleDrive::Session object.
@@ -181,7 +181,7 @@ module GoogleDrive
         def spreadsheet_by_key(key)
           file = file_by_id(key)
           if !file.is_a?(Spreadsheet)
-            raise(GoogleDrive::Error, "The file with the ID is not a spreadsheet: %s" % key)
+            raise(GoogleDriveV4::Error, "The file with the ID is not a spreadsheet: %s" % key)
           end
           return file
         end
@@ -199,7 +199,7 @@ module GoogleDrive
         def spreadsheet_by_url(url)
           file = file_by_url(url)
           if !file.is_a?(Spreadsheet)
-            raise(GoogleDrive::Error, "The file with the URL is not a spreadsheet: %s" % url)
+            raise(GoogleDriveV4::Error, "The file with the URL is not a spreadsheet: %s" % url)
           end
           return file
         end
@@ -238,7 +238,7 @@ module GoogleDrive
                 return $1
             end
           end
-          raise(GoogleDrive::Error, "The given URL is not a known Google Drive URL: %s" % url)
+          raise(GoogleDriveV4::Error, "The given URL is not a known Google Drive URL: %s" % url)
         end
 
         # Returns GoogleDrive::Spreadsheet with given +title+.
@@ -293,7 +293,7 @@ module GoogleDrive
         def collection_by_url(url)
           file = file_by_url(url)
           if !file.is_a?(Collection)
-            raise(GoogleDrive::Error, "The file with the URL is not a collection: %s" % url)
+            raise(GoogleDriveV4::Error, "The file with the URL is not a collection: %s" % url)
           end
           return file
         end
@@ -429,7 +429,7 @@ module GoogleDrive
             end
             if !(response.code =~ /^[23]/)
               raise(
-                response.code == "401" ? AuthenticationError : GoogleDrive::Error,
+                response.code == "401" ? AuthenticationError : GoogleDriveV4::Error,
                 "Response code #{response.code} for #{method} #{url}: " +
                 CGI.unescapeHTML(response.body))
             end
@@ -452,8 +452,10 @@ module GoogleDrive
               return response.body
             when :response
               return response
+           when :json
+              return JSON.parse( response.body )
             else
-              raise(GoogleDrive::Error,
+              raise(GoogleDriveV4::Error,
                   "Unknown params[:response_type]: %s" % response_type)
           end
         end

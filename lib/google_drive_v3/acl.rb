@@ -3,9 +3,9 @@
 # Author: Hiroshi Ichikawa <http://gimite.net/>
 # The license of this source is "New BSD Licence"
 
-require "google_drive/acl_entry"
+require "google_drive_v3/acl_entry"
 
-module GoogleDrive
+module GoogleDriveV3
 
     # ACL (access control list) of a spreadsheet.
     #

@@ -1,18 +1,18 @@
 # Author: Hiroshi Ichikawa <http://gimite.net/>
 # The license of this source is "New BSD Licence"
 
-require "google_drive/basic_fetcher"
+require "google_drive_v4/basic_fetcher"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     class OAuth2Fetcher < BasicFetcher #:nodoc:
-        
+
         def initialize(auth_token, proxy)
           super(proxy)
           @auth_token = auth_token
         end
-        
+
       private
 
         def auth_header(auth)
@@ -20,5 +20,5 @@ module GoogleDrive
         end
 
     end
-    
+
 end

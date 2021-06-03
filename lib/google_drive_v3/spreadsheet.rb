@@ -3,20 +3,20 @@
 
 require "time"
 
-require "google_drive/util"
-require "google_drive/error"
-require "google_drive/worksheet"
-require "google_drive/table"
-require "google_drive/acl"
-require "google_drive/file"
+require "google_drive_v3/util"
+require "google_drive_v3/error"
+require "google_drive_v3/worksheet"
+require "google_drive_v3/table"
+require "google_drive_v3/acl"
+require "google_drive_v3/file"
 
 
-module GoogleDrive
+module GoogleDriveV3
 
     # A spreadsheet.
     #
     # Use methods in GoogleDrive::Session to get GoogleDrive::Spreadsheet object.
-    class Spreadsheet < GoogleDrive::File
+    class Spreadsheet < GoogleDriveV3::File
 
         include(Util)
 
@@ -55,7 +55,7 @@ module GoogleDrive
         def worksheets
           doc = @session.request(:get, self.worksheets_feed_url)
           if doc.root.name != "feed"
-            raise(GoogleDrive::Error,
+            raise(GoogleDriveV3::Error,
                 "%s doesn't look like a worksheets feed URL because its root is not <feed>." %
                 self.worksheets_feed_url)
           end

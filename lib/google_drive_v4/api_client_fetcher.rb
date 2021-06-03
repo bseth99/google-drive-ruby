@@ -6,10 +6,10 @@ require "uri"
 Net::HTTP.version_1_2
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     class ApiClientFetcher
-        
+
         class Response
 
             def initialize(client_response)
@@ -34,7 +34,7 @@ module GoogleDrive
         end
 
         attr_reader(:client, :drive)
-        
+
         def request_raw(method, url, data, extra_header, auth)
           client_response = @client.execute(
               :http_method => method,
@@ -43,7 +43,7 @@ module GoogleDrive
               :headers => extra_header)
           return Response.new(client_response)
         end
-        
+
     end
-    
+
 end

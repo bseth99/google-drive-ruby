@@ -3,13 +3,13 @@
 
 require "set"
 
-require "google_drive/util"
-require "google_drive/error"
-require "google_drive/table"
-require "google_drive/list"
+require "google_drive_v3/util"
+require "google_drive_v3/error"
+require "google_drive_v3/table"
+require "google_drive_v3/list"
 
 
-module GoogleDrive
+module GoogleDriveV3
 
     # A worksheet (i.e. a tab) in a spreadsheet.
     # Use GoogleDrive::Spreadsheet#worksheets to get GoogleDrive::Worksheet object.
@@ -43,7 +43,7 @@ module GoogleDrive
           # from it.
           if !(@cells_feed_url =~
               %r{^https?://spreadsheets.google.com/feeds/cells/(.*)/(.*)/private/full((\?.*)?)$})
-            raise(GoogleDrive::Error,
+            raise(GoogleDriveV3::Error,
               "Cells feed URL is in unknown format: #{@cells_feed_url}")
           end
           return "https://spreadsheets.google.com/feeds/worksheets/#{$1}/private/full/#{$2}#{$3}"
@@ -54,7 +54,7 @@ module GoogleDrive
           if !@spreadsheet
             if !(@cells_feed_url =~
                 %r{^https?://spreadsheets.google.com/feeds/cells/(.*)/(.*)/private/full(\?.*)?$})
-              raise(GoogleDrive::Error,
+              raise(GoogleDriveV3::Error,
                 "Cells feed URL is in unknown format: #{@cells_feed_url}")
             end
             @spreadsheet = @session.spreadsheet_by_key($1)
@@ -336,11 +336,11 @@ module GoogleDrive
               for entry in result.css("atom|entry")
                 interrupted = entry.css("batch|interrupted")[0]
                 if interrupted
-                  raise(GoogleDrive::Error, "Update has failed: %s" %
+                  raise(GoogleDriveV3::Error, "Update has failed: %s" %
                     interrupted["reason"])
                 end
                 if !(entry.css("batch|status").first["code"] =~ /^2/)
-                  raise(GoogleDrive::Error, "Updating cell %s has failed: %s" %
+                  raise(GoogleDriveV3::Error, "Updating cell %s has failed: %s" %
                     [entry.css("atom|id").text, entry.css("batch|status")[0]["reason"]])
                 end
               end

@@ -5,11 +5,11 @@ require "cgi"
 require "forwardable"
 require "stringio"
 
-require "google_drive/util"
-require "google_drive/acl"
+require "google_drive_v4/util"
+require "google_drive_v4/acl"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     # A file in Google Drive, including Google Docs document/spreadsheet/presentation.
     #
@@ -108,7 +108,7 @@ module GoogleDrive
         # Downloads the file and writes it to +io+.
         def download_to_io(io, params = {})
           if !self.api_file.download_url
-            raise(GoogleDrive::Error, "Downloading is not supported for this file.")
+            raise(GoogleDriveV4::Error, "Downloading is not supported for this file.")
           end
           # TODO Use streaming if possible.
           api_result = @session.execute!(:uri => self.api_file.download_url)
@@ -132,7 +132,7 @@ module GoogleDrive
           export_url = self.export_links[mime_type]
           if !export_url
             raise(
-                GoogleDrive::Error,
+                GoogleDriveV4::Error,
                 "This file doesn't support export with mime type %p. Supported mime types: %p" %
                     [mime_type, self.export_links.to_hash().keys])
           end

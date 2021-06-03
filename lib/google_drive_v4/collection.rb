@@ -1,21 +1,21 @@
 # Author: Hiroshi Ichikawa <http://gimite.net/>
 # The license of this source is "New BSD Licence"
 
-require "google_drive/util"
-require "google_drive/error"
-require "google_drive/spreadsheet"
+require "google_drive_v4/util"
+require "google_drive_v4/error"
+require "google_drive_v4/spreadsheet"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     # Use GoogleDrive::Session#root_collection, GoogleDrive::Collection#subcollections,
     # or GoogleDrive::Session#collection_by_url to get GoogleDrive::Collection object.
-    class Collection < GoogleDrive::File
+    class Collection < GoogleDriveV4::File
 
         include(Util)
 
         alias collection_feed_url document_feed_url
-        
+
         # Adds the given GoogleDrive::File to the collection.
         def add(file)
           new_child = @session.drive.children.insert.request_schema.new({
@@ -69,7 +69,7 @@ module GoogleDrive
         #
         #   # Gets all the files in collection, including subcollections.
         #   collection.files
-        #   
+        #
         #   # Gets only files with title "hoge".
         #   collection.files("title" => "hoge", "title-exact" => "true")
         def files(params = {}, &block)
@@ -82,17 +82,17 @@ module GoogleDrive
         def spreadsheets(params = {}, &block)
           return files_with_type("application/vnd.google-apps.spreadsheet", params, &block)
         end
-        
+
         # Returns all the Google Docs documents in the collection.
         def documents(params = {}, &block)
           return files_with_type("application/vnd.google-apps.document", params, &block)
         end
-        
+
         # Returns all its subcollections.
         def subcollections(params = {}, &block)
           return files_with_type("application/vnd.google-apps.folder", params, &block)
         end
-        
+
         # Returns a file (can be a spreadsheet, document, subcollection or other files) in the
         # collection which exactly matches +title+ as GoogleDrive::File.
         # Returns nil if not found. If multiple collections with the +title+ are found, returns
@@ -102,7 +102,7 @@ module GoogleDrive
         def file_by_title(title)
           return file_by_title_with_type(title, nil)
         end
-        
+
         # Returns its subcollection whose title exactly matches +title+ as GoogleDrive::Collection.
         # Returns nil if not found. If multiple collections with the +title+ are found, returns
         # one of them.
@@ -115,7 +115,7 @@ module GoogleDrive
         def contents_url
           self.document_feed_url + "/contents"
         end
-        
+
       protected
 
         def file_by_title_with_type(title, type)
@@ -131,7 +131,7 @@ module GoogleDrive
             return files_with_type(type, "q" => ["title = ?", title], "maxResults" => 1)[0]
           end
         end
-        
+
       private
 
         def files_with_type(type, params = {}, &block)
@@ -145,7 +145,7 @@ module GoogleDrive
           # This is faster than calling children.list and then files.get for each file.
           return @session.files(params, &block)
         end
-        
+
     end
-    
+
 end

@@ -2,11 +2,11 @@
 # The license of this source is "New BSD Licence"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     # Raised when spreadsheets.google.com has returned error.
     class Error < RuntimeError
 
     end
-    
+
 end

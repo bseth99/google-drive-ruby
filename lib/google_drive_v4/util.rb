@@ -6,8 +6,8 @@ require "cgi"
 require "google/api_client"
 
 
-module GoogleDrive
-    
+module GoogleDriveV4
+
     module Util #:nodoc:
 
         EXT_TO_CONTENT_TYPE = {
@@ -32,13 +32,13 @@ module GoogleDrive
             ".zip" =>"application/zip",
             ".swf" =>"application/x-shockwave-flash",
         }
-        
+
       module_function
-        
+
         def encode_query(params)
           return params.map(){ |k, v| CGI.escape(k.to_s()) + "=" + CGI.escape(v.to_s()) }.join("&")
         end
-        
+
         def concat_url(url, piece)
           (url_base, url_query) = url.split(/\?/, 2)
           (piece_base, piece_query) = piece.split(/\?/, 2)
@@ -52,7 +52,7 @@ module GoogleDrive
           # Should also escape "\n" to keep it in cell contents.
           return CGI.escapeHTML(str.to_s()).gsub(/\n/, '&#x0a;')
         end
-        
+
         def construct_query(arg)
 
           case arg
@@ -174,7 +174,7 @@ module GoogleDrive
               "application/octet-stream"
           return Google::APIClient::UploadIO.new(path_or_io, content_type)
         end
-        
+
     end
-    
+
 end

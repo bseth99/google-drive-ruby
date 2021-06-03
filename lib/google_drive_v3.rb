@@ -4,10 +4,10 @@
 require "json"
 require "google/api_client"
 
-require "google_drive_v4/session"
+require "google_drive_v3/session"
 
 
-module GoogleDriveV4
+module GoogleDriveV3
 
     # Authenticates with given OAuth1 or OAuth2 token.
     #
@@ -112,8 +112,7 @@ module GoogleDriveV4
       auth.client_secret = client_secret
       auth.scope =
           "https://www.googleapis.com/auth/drive " +
-          "https://www.googleapis.com/auth/spreadsheets"
-
+          "https://spreadsheets.google.com/feeds/"
       auth.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
 
       if token_data
@@ -142,7 +141,7 @@ module GoogleDriveV4
 
       end
 
-      return GoogleDriveV4.login_with_oauth(client)
+      return GoogleDriveV3.login_with_oauth(client)
 
     end
 
@@ -158,8 +157,8 @@ module GoogleDriveV4
        auth.client_id = client_id
        auth.client_secret = client_secret
        auth.scope = [
-           "https://www.googleapis.com/auth/spreadsheets",
-           "https://www.googleapis.com/auth/drive"
+           "https://www.googleapis.com/auth/drive",
+           "https://spreadsheets.google.com/feeds/"
        ]
        auth.redirect_uri = opts[:redirect_uri] || "urn:ietf:wg:oauth:2.0:oob"
 
@@ -191,8 +190,8 @@ module GoogleDriveV4
        auth.client_id = client_id
        auth.client_secret = client_secret
        auth.scope = [
-          "https://www.googleapis.com/auth/spreadsheets",
-          "https://www.googleapis.com/auth/drive"
+           "https://www.googleapis.com/auth/drive",
+           "https://spreadsheets.google.com/feeds/"
        ]
        auth.redirect_uri = opts[:redirect_uri] || "urn:ietf:wg:oauth:2.0:oob"
 
@@ -202,9 +201,7 @@ module GoogleDriveV4
        auth.issued_at = Time.iso8601(token["issued_at"])
        auth.fetch_access_token!()
 
-       return GoogleDriveV4.login_with_oauth(client)
+       return GoogleDriveV3.login_with_oauth(client)
     end
 
 end
-
-GoogleDrive = GoogleDriveV4

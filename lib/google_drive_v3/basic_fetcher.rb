@@ -6,10 +6,10 @@ require "uri"
 Net::HTTP.version_1_2
 
 
-module GoogleDrive
+module GoogleDriveV3
 
     class BasicFetcher #:nodoc:
-        
+
         def initialize(proxy)
           if proxy
             @proxy = proxy
@@ -20,7 +20,7 @@ module GoogleDrive
             @proxy = Net::HTTP
           end
         end
-        
+
         def request_raw(method, url, data, extra_header, auth)
           uri = URI.parse(url)
           http = @proxy.new(uri.host, uri.port)
@@ -38,13 +38,13 @@ module GoogleDrive
             end
           end
         end
-        
+
       private
-        
+
         def auth_header(auth)
           return {}
         end
 
     end
-    
+
 end

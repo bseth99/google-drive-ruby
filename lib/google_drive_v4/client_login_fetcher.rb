@@ -1,22 +1,22 @@
 # Author: Hiroshi Ichikawa <http://gimite.net/>
 # The license of this source is "New BSD Licence"
 
-require "google_drive/basic_fetcher"
+require "google_drive_v4/basic_fetcher"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     class ClientLoginFetcher < BasicFetcher #:nodoc:
-        
+
         def initialize(auth_tokens, proxy)
           super(proxy)
           @auth_tokens = auth_tokens
         end
-        
+
         attr_accessor(:auth_tokens)
-        
+
       private
-        
+
         def auth_header(auth)
           token = auth == :none ? nil : @auth_tokens[auth]
           if token
@@ -27,5 +27,5 @@ module GoogleDrive
         end
 
     end
-    
+
 end

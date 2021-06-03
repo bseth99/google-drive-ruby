@@ -4,7 +4,7 @@
 # Author: Phuogn Nguyen <https://github.com/phuongnd08>
 # The license of this source is "New BSD Licence"
 
-module GoogleDrive
+module GoogleDriveV3
 
     # An entry of an ACL (access control list) of a spreadsheet.
     #
@@ -40,7 +40,7 @@ module GoogleDrive
 
         def edit_url
           warn(
-              "WARNING: GoogleDrive::AclEntry\#edit_url is deprecated and will be removed in the next version.")
+              "WARNING: GoogleDriveV3::AclEntry\#edit_url is deprecated and will be removed in the next version.")
           return @params[:edit_url]
         end
 
@@ -61,4 +61,3 @@ module GoogleDrive
     end
 
 end
-

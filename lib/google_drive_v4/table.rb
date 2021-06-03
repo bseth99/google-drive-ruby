@@ -1,12 +1,12 @@
 # Author: Hiroshi Ichikawa <http://gimite.net/>
 # The license of this source is "New BSD Licence"
 
-require "google_drive/util"
-require "google_drive/error"
-require "google_drive/record"
+require "google_drive_v4/util"
+require "google_drive_v4/error"
+require "google_drive_v4/record"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     # DEPRECATED: Table and Record feeds are deprecated and they will not be available after
     # March 2012.
@@ -56,5 +56,5 @@ module GoogleDrive
         end
 
     end
-    
+
 end

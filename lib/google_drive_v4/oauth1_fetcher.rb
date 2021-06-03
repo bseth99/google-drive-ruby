@@ -5,14 +5,14 @@ require "rubygems"
 require "oauth"
 
 
-module GoogleDrive
+module GoogleDriveV4
 
     class OAuth1Fetcher #:nodoc:
-        
+
         def initialize(oauth1_token)
           @oauth1_token = oauth1_token
         end
-        
+
         def request_raw(method, url, data, extra_header, auth)
           if method == :delete || method == :get
             return @oauth1_token.__send__(method, url, extra_header)
@@ -20,7 +20,7 @@ module GoogleDrive
             return @oauth1_token.__send__(method, url, data, extra_header)
           end
         end
-        
+
     end
-    
+
 end
