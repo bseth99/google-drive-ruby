@@ -326,7 +326,7 @@ module GoogleDriveV4
 
            if !@modified.empty?
 
-             @modified.each_slice(25) do |chunk|
+             @modified.each_slice(400) do |chunk|
 
                 data = Hash[
                   "valueInputOption" => "USER_ENTERED",
