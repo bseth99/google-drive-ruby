@@ -252,16 +252,18 @@ module GoogleDriveV4
 
            @cells = {}
            @input_values = {}
-           doc["values"].each_with_index do |entry, row|
-             entry.each_with_index do |val, col|
-                if doc["majorDimension"] == "ROWS"
-                   @cells[[row+1,col+1]] = val.to_s
-                   @input_values[[row+1,col+1]] = val.to_s
-                elsif doc["majorDimension"] == "COLUMNS"
-                   @cells[[col+1,row+1]] = val.to_s
-                   @input_values[[col+1,row+1]] = val.to_s
-                else
-                   raise(GoogleDriveV4::Error, "Unknown major dimension: %s" % doc["majorDimension"] )
+           if !doc["values"].nil?
+              doc["values"].each_with_index do |entry, row|
+                entry.each_with_index do |val, col|
+                   if doc["majorDimension"] == "ROWS"
+                      @cells[[row+1,col+1]] = val.to_s
+                      @input_values[[row+1,col+1]] = val.to_s
+                   elsif doc["majorDimension"] == "COLUMNS"
+                      @cells[[col+1,row+1]] = val.to_s
+                      @input_values[[col+1,row+1]] = val.to_s
+                   else
+                      raise(GoogleDriveV4::Error, "Unknown major dimension: %s" % doc["majorDimension"] )
+                   end
                 end
              end
           end
@@ -325,8 +327,8 @@ module GoogleDriveV4
            end
 
            if !@modified.empty?
-
-             @modified.each_slice(400) do |chunk|
+             chunk = @modified
+             #@modified.each_slice(400) do |chunk|
 
                 data = Hash[
                   "valueInputOption" => "USER_ENTERED",
@@ -343,7 +345,7 @@ module GoogleDriveV4
                    ]
                 end
                 @session.request(:post, self.batch_values_url , :data => data.to_json, :header => Hash[ "Content-Type" => "application/json;charset=utf-8"], :response_type => :json )
-             end
+             #end
 
 
 
