@@ -429,7 +429,7 @@ module GoogleDriveV4
             elsif response.code == "401" && @on_auth_fail && @on_auth_fail.call()
                next
             end
-            if response.code == 429 && wait_retry < 5
+            if response.code == "429" && wait_retry < 5
                puts "Sleeping for exhaustion"
                wait_retry += 1
                sleep 60.0
